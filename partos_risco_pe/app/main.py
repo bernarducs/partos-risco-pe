@@ -2,31 +2,45 @@ import dash_bootstrap_components as dbc
 from dash import Dash, dcc, html
 
 from calls import callbacks
-from comps.header import header
-from comps.footer import footer
-from comps.filtros import comp_filtros
+from componentes.header import header
+from componentes.footer import footer
+from componentes.filtros import comp_filtros
 
 
+external_stylesheets=[
+    dbc.themes.LUMEN,
+    'partos_risco_pe/app/assets/style.css' 
+    ]
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.LUMEN])
+app = Dash(__name__, external_stylesheets=external_stylesheets)
 
 app.layout = html.Div([
     header,
     comp_filtros,
-    html.Div(
+    html.Div([
         dbc.Row([
-            dbc.Col(dcc.Graph(id='mapa')),
-            dbc.Col(id='tabela')
-        ], style={'margin-bottom': '2rem'}),
-        style={'margin-left': '3rem', 'margin-right': '3rem'}
-    ),
-    # dbc.Row([
-    #     dbc.Col(id='tabela')
-    # ]),
+            dbc.Col(dcc.Graph(id='mapa'), width=8),
+            dbc.Col([
+                dbc.Row(html.P("Município de residência")),
+                dbc.Row(id='tabela')
+            ], width=4)
+        ], style={'margin-bottom': '2rem'}, justify='between'),
+        dbc.Row([
+            dbc.Col(html.H4("GERES de Ocorrência x Residência")),
+        ]),
+        dbc.Row([
+            dbc.Col(html.P("A tabela abaixo mostra a relação entre as regionais onde acontecem os partos (linhas) e as regionais demandantes (colunas)")),
+        ]),
+        dbc.Row([
+            dbc.Col(id='tabela-geres'),
+        ]),
+    ],
+        style={'margin-left': '2rem', 'margin-right': '2rem'}),
     footer
-])
+], className='comps')
 
 callbacks(app)
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
