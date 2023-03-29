@@ -10,10 +10,10 @@ drop_geres = dcc.Dropdown(
     options=[
         {"label": g, "value": g} for g in geres
     ],
-    placeholder="GERES",
-    value='I GERES - Recife',
+    placeholder="Escolha uma GERES",
+    value=['I GERES - Recife'],
     clearable=False,
-    multi=False
+    multi=True
 )
 
 drop_tipo_partos = dcc.Dropdown(

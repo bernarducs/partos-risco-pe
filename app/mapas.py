@@ -75,7 +75,7 @@ def mapa_municipio(df, tipo):
             mode='markers',
             marker=dict(
                 size=14,
-                color='#BDCDD6',
+                color='#95BDFF',
                 opacity=0.7
             ),
             hovertext=point_hover_template(df_hosp_leitos_sem_obst),
@@ -90,7 +90,7 @@ def mapa_municipio(df, tipo):
             marker=go.scattermapbox.Marker(
                 # size=df_hosp_leitos_com_obst['total_leitos_obstetricos'] / 2.5,
                 size=14,
-                color='#3F979B',
+                color='#146C94',
                 opacity=0.7
             ),
             hovertext=point_hover_template(df_hosp_leitos_com_obst),
@@ -103,7 +103,7 @@ def mapa_municipio(df, tipo):
         title=f"Partos realizados pela GERES selecionada - {tipo} (2020-2022)",
         margin={"r":0,"t":25,"l":0,"b":10},
         # height=500,
-        mapbox_style="carto-positron",
+        mapbox_style="open-street-map",
         # mapbox_zoom=6.8, # quando só na coluna
         mapbox_zoom=6.2,
         mapbox_center = {"lat": -8.3517, "lon": -38.0073},
