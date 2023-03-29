@@ -2,7 +2,7 @@ import json
 import pandas as pd
 import os
 
-DATADIR = os.getcwd() + '/partos_risco_pe/datasets/outputs'
+DATADIR = os.getcwd() + '/app/datasets/outputs'
 
 GERES = {
     '2601 Recife': 'I GERES - Recife',

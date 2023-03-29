@@ -9,7 +9,7 @@ from componentes.filtros import comp_filtros
 
 external_stylesheets=[
     dbc.themes.LUMEN,
-    'partos_risco_pe/app/assets/style.css' 
+    '/app/assets/style.css' 
     ]
 
 app = Dash(__name__, external_stylesheets=external_stylesheets)
@@ -43,4 +43,4 @@ callbacks(app)
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
