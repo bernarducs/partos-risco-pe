@@ -17,13 +17,13 @@ app.layout = html.Div(
             [
                 dbc.Row(
                     [
-                        dbc.Col(dcc.Graph(id='mapa'), width=8),
+                        dbc.Col(dcc.Graph(id='mapa'), sm=12, md=8, lg=8),
                         dbc.Col(
                             [
                                 dbc.Row(html.P('Município de residência')),
                                 dbc.Row(id='tabela'),
                             ],
-                            width=4,
+                            sm=12, md=4, lg=4,
                         ),
                     ],
                     style={'margin-bottom': '2rem'},
