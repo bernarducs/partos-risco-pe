@@ -13,14 +13,19 @@ def point_hover_template(df):
         'estabelecimento',
         'municipio',
         'obst_cirurg',
-        'obst_clinica',
+        'obst_clinica', 
+        'uti_neo_i', 
+        'uti_neo_ii', 
+        'uti_neo_iii', 
+        'uci_neo_conv', 
+        'uci_neo_canguru'
     ]
     hover_text = [
-        '<b>{}</b><br>{}<br><br><b>Leitos Obstetrícia</b><br>Cirúgicos: {} / Clínica: {}'.format(
-            txt[0], txt[1], txt[2], txt[3]
-        )
+        '<b>{}</b><br>{}<br><br><b>Leitos Obstetrícia</b><br>Cirúgicos: {} / Clínica: {}<br><br><b>UTI Neo</b><br>Tipo I: {} / Tipo II: {} / Tipo III: {}<br><br><b>UCI Neo</b><br>Convencional: {} / Caguru: {}'.format(
+            txt[0], txt[1], txt[2], txt[3], txt[4], txt[5], txt[6], txt[7], txt[8]
+            ) 
         for txt in df[cols_hover].values
-    ]
+        ]
     return hover_text
 
 
