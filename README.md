@@ -5,7 +5,7 @@
 
 $ git clone https://github.com/bernarducs/partos-risco-pe.git
 $ cd partos-risco-pe
-$ python -m venv ve; source ve/bin/activate; python install -r requirements.txt
+$ python -m venv ve; source ve/bin/activate; python -m pip install -U pip; pip install -r requirements.txt
 
 
 # rodando...
