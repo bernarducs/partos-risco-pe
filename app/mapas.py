@@ -1,5 +1,5 @@
 import plotly.graph_objects as go
-from data import hospitais_df, municipios_poligono
+from .data import hospitais_df, municipios_poligono
 
 df_hosp_leitos = hospitais_df()
 df_hosp_leitos_com_obst = df_hosp_leitos.query("proced_partos == 'SIM'")

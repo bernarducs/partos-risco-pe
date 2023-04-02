@@ -1,6 +1,6 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html
-from data import geres_lista
+from ..data import geres_lista
 
 geres = geres_lista()
 
@@ -51,7 +51,7 @@ instrucoes = 'O mapa abaixo traz a abragência de partos realizados de acordo co
             filtro ao lado para alternar entre partos normal/cesário \
                 e de risco.'
 
-comp_filtros = html.Div(
+filtros = html.Div(
     dbc.Row(
         [
             dbc.Col(
