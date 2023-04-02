@@ -13,23 +13,40 @@ def point_hover_template(df):
         'estabelecimento',
         'municipio',
         'obst_cirurg',
-        'obst_clinica', 
-        'uti_neo_i', 
-        'uti_neo_ii', 
-        'uti_neo_iii', 
-        'uci_neo_conv', 
-        'uci_neo_canguru'
+        'obst_clinica',
+        'uti_neo_i',
+        'uti_neo_ii',
+        'uti_neo_iii',
+        'uci_neo_conv',
+        'uci_neo_canguru',
     ]
     hover_text = [
         '<b>{}</b><br>{}<br><br><b>Leitos Obstetrícia</b><br>Cirúgicos: {} / Clínica: {}<br><br><b>UTI Neo</b><br>Tipo I: {} / Tipo II: {} / Tipo III: {}<br><br><b>UCI Neo</b><br>Convencional: {} / Caguru: {}'.format(
-            txt[0], txt[1], txt[2], txt[3], txt[4], txt[5], txt[6], txt[7], txt[8]
-            ) 
+            txt[0],
+            txt[1],
+            txt[2],
+            txt[3],
+            txt[4],
+            txt[5],
+            txt[6],
+            txt[7],
+            txt[8],
+        )
         for txt in df[cols_hover].values
-        ]
+    ]
     return hover_text
 
 
-def mapa_municipio(df, tipo):
+def mapa_municipio(df, tipo, plotar_pontos):
+
+    ver_estab_com_leitos, ver_estab_sem_leitos = True, True
+    if plotar_pontos == 'nenhum':
+        ver_estab_com_leitos, ver_estab_sem_leitos = False, False
+    elif plotar_pontos == 'com':
+        ver_estab_sem_leitos = False
+    elif plotar_pontos == 'sem':
+        ver_estab_com_leitos = False
+
     df_metricas = df[['valor']].describe()
 
     fig = go.Figure(
@@ -76,6 +93,7 @@ def mapa_municipio(df, tipo):
                 legendrank=1,
             ),
             go.Scattermapbox(
+                visible=ver_estab_sem_leitos,
                 name='Estabelecimentos SEM leitos obst. em jan/2023',
                 lat=df_hosp_leitos_sem_obst['lat'],
                 lon=df_hosp_leitos_sem_obst['lng'],
@@ -86,6 +104,7 @@ def mapa_municipio(df, tipo):
                 legendrank=3,
             ),
             go.Scattermapbox(
+                visible=ver_estab_com_leitos,
                 name='Estabelecimentos COM leitos obst. em jan/2023',
                 lat=df_hosp_leitos_com_obst['lat'],
                 lon=df_hosp_leitos_com_obst['lng'],
@@ -104,7 +123,10 @@ def mapa_municipio(df, tipo):
     )
 
     fig.update_layout(
-        title=f'Partos realizados pela GERES selecionada - {tipo} (2020-2022)',
+        title={
+            'text': f'<b>Partos realizados pela GERES selecionada - {tipo} (2020-2022)</b>',
+            'font': {'size': 16, 'family': 'var(--bs-font-sans-serif)'},
+        },
         margin={'r': 0, 't': 25, 'l': 0, 'b': 10},
         # height=500,
         mapbox_style='open-street-map',

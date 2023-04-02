@@ -13,8 +13,9 @@ def callbacks(app):
         Output('tabela', 'children'),
         Input('drop-geres', 'value'),
         Input('drop-tipo-parto', 'value'),
+        Input('drop-pontos-estab', 'value'),
     )
-    def mapa(geres, tipo):
+    def mapa(geres, tipo, plotar_pontos):
         if len(geres) == 0:
             series_valor = df_partos_munic[lista_geres].sum(
                 numeric_only=True, axis=1
@@ -50,6 +51,8 @@ def callbacks(app):
             id='table-municipios',
             columns=[{'name': i, 'id': i} for i in df_tab_sorted.columns],
             data=df_tab_sorted.to_dict('records'),
+            filter_action='native',
+            filter_options={'placeholder_text': 'Filtrar...'},
             fixed_rows={'headers': True},
             page_size=9,
             style_table={'overflowX': 'auto', 'overflowY': 'auto'},
@@ -69,8 +72,7 @@ def callbacks(app):
                 'width': 35,
             },
         )
-
-        return (mapa_municipio(df, tipo), data_table)
+        return (mapa_municipio(df, tipo, plotar_pontos), data_table)
 
     @app.callback(
         Output('tabela-geres', 'children'),
@@ -123,5 +125,11 @@ def callbacks(app):
                 for c in lista_geres
             ],
         )
-
         return data_table
+
+    @app.callback(
+        Output('foo', 'children'),
+        Input('drop-pontos-estab', 'value'),
+    )
+    def mapa(pontos_estab_leitos):
+        return pontos_estab_leitos

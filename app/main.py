@@ -20,10 +20,15 @@ app.layout = html.Div(
                         dbc.Col(dcc.Graph(id='mapa'), sm=12, md=8, lg=8),
                         dbc.Col(
                             [
-                                dbc.Row(html.P('Município de residência')),
+                                dbc.Row(
+                                    html.P('Município de residência'),
+                                    style={'font-weight': 'bold'},
+                                ),
                                 dbc.Row(id='tabela'),
                             ],
-                            sm=12, md=4, lg=4,
+                            sm=12,
+                            md=4,
+                            lg=4,
                         ),
                     ],
                     style={'margin-bottom': '2rem'},
@@ -31,7 +36,15 @@ app.layout = html.Div(
                 ),
                 dbc.Row(
                     [
-                        dbc.Col(html.H4('GERES de Ocorrência x Residência')),
+                        dbc.Col(
+                            html.P(
+                                ['GERES de Ocorrência x Residência'],
+                                style={
+                                    'margin-bottom': '0rem',
+                                    'font-weight': 'bold',
+                                },
+                            )
+                        ),
                     ]
                 ),
                 dbc.Row(
@@ -48,12 +61,17 @@ app.layout = html.Div(
                         dbc.Col(id='tabela-geres'),
                     ]
                 ),
+                dbc.Row(
+                    [
+                        dbc.Col(id='foo'),
+                    ]
+                ),
             ],
             style={'margin-left': '2rem', 'margin-right': '2rem'},
         ),
         footer,
     ],
-    className='comps',
+    className='comps'
 )
 
 callbacks(app)
