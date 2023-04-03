@@ -1,6 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html
-from ..data_ import geres_nomes
+
+from ..data import geres_nomes
 
 geres = geres_nomes()
 
@@ -10,7 +11,7 @@ drop_geres = dcc.Dropdown(
     placeholder='Escolha uma GERES',
     value=['I GERES - Recife'],
     clearable=False,
-    multi=False,
+    multi=True,
 )
 
 drop_tipo_partos = dcc.Dropdown(
@@ -41,6 +42,18 @@ drop_pontos_estab = dcc.Dropdown(
     ],
     placeholder='Partos (tipo)',
     value='todos',
+    clearable=False,
+    multi=False,
+)
+
+drop_gestao = dcc.Dropdown(
+    id='drop-gestao',
+    options=[
+        {'label': 'Todos', 'value': 0},
+        {'label': 'Municipal', 'value': 1},
+        {'label': 'Estadual', 'value': 2},
+    ],
+    value=0,
     clearable=False,
     multi=False,
 )
@@ -126,7 +139,20 @@ filtros = html.Div(
                                     drop_pontos_estab,
                                 ],
                                 style={'margin-bottom': '0.5rem'},
-                            )
+                            ),
+                            dbc.Row(
+                                [
+                                    html.P(
+                                        ['Gestão:'],
+                                        style={
+                                            'margin-bottom': '0rem',
+                                            'font-weight': 'bold',
+                                        },
+                                    ),
+                                    drop_gestao,
+                                ],
+                                style={'margin-bottom': '0.5rem'},
+                            ),
                         ]
                     )
                 ],

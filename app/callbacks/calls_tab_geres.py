@@ -1,36 +1,44 @@
 from dash import Input, Output, dash_table
-from ..data_ import GRUPO_PROCED, filter_dataset, geres_nomes
+
+from ..data import GRUPO_PROCED, filter_dataset, geres_nomes
 
 geres_nomes = geres_nomes()
+
 
 def tab_geres_partos(app):
     @app.callback(
         Output('tabela-geres', 'children'),
         Input('drop-geres', 'value'),
         Input('drop-tipo-parto', 'value'),
+        Input('drop-gestao', 'value'),
     )
-    def call_function(geres, tipo):
+    def call_function(geres, tipo, gestao):
         if tipo in ['Normal/Cesário', 'De Risco']:
             df = filter_dataset(TIPO_PARTO=tipo)
         else:
             df = filter_dataset()
 
-        df_pivot = df.\
-            groupby(['GERES_MOV', 'GERES_RES'], as_index=False)['N_AIH'].\
-            count().\
-            pivot_table(
-                index='GERES_MOV', 
-                columns='GERES_RES', 
-                values='N_AIH', 
-                aggfunc='sum', 
-                fill_value=0, 
-                # margins=True,
-                # margins_name='Total'
-                ).\
-            reset_index()
-        
+        if gestao != 0:
+            df.query('GESTAO == @gestao', inplace=True)
+
+        df_pivot = (
+            df.groupby(['GERES_MOV', 'GERES_RES'], as_index=False)['N_AIH']
+            .count()
+            .pivot_table(
+                index='GERES_MOV',
+                columns='GERES_RES',
+                values='N_AIH',
+                aggfunc='sum',
+                fill_value=0,
+                margins=True,
+                margins_name='Total',
+            )
+            .reset_index()
+        )
+
         df_pivot.rename(
-            columns={'GERES_MOV': 'GERES Intern. (linhas) / Resid. (colunas)'}, inplace=True
+            columns={'GERES_MOV': 'GERES Intern. (linhas) / Resid. (colunas)'},
+            inplace=True,
         )
 
         data_table = dash_table.DataTable(
@@ -63,7 +71,7 @@ def tab_geres_partos(app):
             },
             style_cell_conditional=[
                 {'if': {'column_id': c}, 'textAlign': 'right'}
-                for c in geres_nomes
+                for c in df_pivot.columns[1:]
             ],
         )
         return data_table

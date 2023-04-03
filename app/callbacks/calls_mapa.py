@@ -1,5 +1,6 @@
 from dash import Input, Output, dash_table
-from ..data_ import filter_dataset
+
+from ..data import filter_dataset
 from ..mapas import mapa_municipio
 
 
@@ -9,30 +10,32 @@ def mapa(app):
         Output('tabela', 'children'),
         Input('drop-geres', 'value'),
         Input('drop-tipo-parto', 'value'),
+        Input('drop-gestao', 'value'),
         Input('drop-pontos-estab', 'value'),
     )
-    def call_function(geres, tipo, plotar_pontos):
+    def call_function(geres, tipo, gestao, plotar_pontos):
         mapa_visible = True
         if len(geres) == 0:
             df = filter_dataset()
-            mapa_visible = False
         else:
             df = filter_dataset(GERES_MOV=geres)
-        
+
         if tipo in ['Normal/Cesário', 'De Risco']:
             df.query('TIPO_PARTO == @tipo', inplace=True)
-        
-        df_grp = df.\
-            groupby(
-                ['NM_MUNIC_RES', 'GERES_MOV', 'MUNIC_RES'], 
-                as_index=False)['N_AIH'].\
-                count().\
-                rename(columns={'N_AIH': 'Partos'})
-        
-        print(df_grp)
+
+        if gestao != 0:
+            df.query('GESTAO == @gestao', inplace=True)
+
+        df_grp = (
+            df.groupby(
+                ['NM_MUNIC_RES', 'GERES_RES', 'MUNIC_RES'], as_index=False
+            )['N_AIH']
+            .count()
+            .rename(columns={'N_AIH': 'Partos'})
+        )
 
         # TABELA
-        df_tab = df_grp[['NM_MUNIC_RES', 'GERES_MOV', 'Partos']]
+        df_tab = df_grp[['NM_MUNIC_RES', 'GERES_RES', 'Partos']]
         df_tab.columns = ['Município', 'GERES', 'Partos']
         df_tab_sorted = df_tab.sort_values(by='Partos', ascending=False)
 
@@ -62,7 +65,4 @@ def mapa(app):
             },
         )
 
-        return (
-            mapa_municipio(df_grp, tipo, plotar_pontos, mapa_visible), 
-            data_table
-            )
+        return (mapa_municipio(df_grp, tipo, plotar_pontos), data_table)

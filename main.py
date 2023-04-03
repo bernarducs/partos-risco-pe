@@ -1,11 +1,8 @@
 import dash_bootstrap_components as dbc
-from app.callbacks import callbacks
-from app.componentes.filtros import filtros
-from app.componentes.footer import footer
-from app.componentes.header import header
-from app.componentes.mapa import mapa
-from app.componentes.tab_geres import tab_geres
 from dash import Dash, html
+
+from app.callbacks import callbacks
+from app.componentes import filtros, footer, header, mapa, tab_geres
 
 external_stylesheets = [dbc.themes.LUMEN, '/app/assets/style.css']
 
@@ -20,7 +17,7 @@ app.layout = html.Div(
         tab_geres,
         footer,
     ],
-    className='comps'
+    className='comps',
 )
 
 callbacks(app)

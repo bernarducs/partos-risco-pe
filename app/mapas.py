@@ -1,4 +1,5 @@
 import plotly.graph_objects as go
+
 from .data import hospitais_df, municipios_poligono
 
 df_hosp_leitos = hospitais_df()
@@ -37,7 +38,7 @@ def point_hover_template(df):
     return hover_text
 
 
-def mapa_municipio(df, tipo, plotar_pontos, mapa_visible):
+def mapa_municipio(df, tipo, plotar_pontos):
 
     ver_estab_com_leitos, ver_estab_sem_leitos = True, True
     if plotar_pontos == 'nenhum':
@@ -52,7 +53,6 @@ def mapa_municipio(df, tipo, plotar_pontos, mapa_visible):
     fig = go.Figure(
         [
             go.Choroplethmapbox(
-                visible=mapa_visible,
                 name='',
                 geojson=munic_poligono,
                 featureidkey='properties.GEOCODIGO',
@@ -61,7 +61,7 @@ def mapa_municipio(df, tipo, plotar_pontos, mapa_visible):
                 # HOVER
                 hovertext=[
                     '{}<br>{}'.format(txt_vals[0], txt_vals[1])
-                    for txt_vals in df[['NM_MUNIC_RES', 'GERES_MOV']].values
+                    for txt_vals in df[['NM_MUNIC_RES', 'GERES_RES']].values
                 ],
                 # hoverinfo="text+z",
                 hovertemplate='Partos:  %{z:,.0d} <br>%{hovertext}',
