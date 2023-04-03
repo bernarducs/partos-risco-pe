@@ -37,7 +37,7 @@ def point_hover_template(df):
     return hover_text
 
 
-def mapa_municipio(df, tipo, plotar_pontos):
+def mapa_municipio(df, tipo, plotar_pontos, mapa_visible):
 
     ver_estab_com_leitos, ver_estab_sem_leitos = True, True
     if plotar_pontos == 'nenhum':
@@ -47,20 +47,21 @@ def mapa_municipio(df, tipo, plotar_pontos):
     elif plotar_pontos == 'sem':
         ver_estab_com_leitos = False
 
-    df_metricas = df[['valor']].describe()
+    df_metricas = df[['Partos']].describe()
 
     fig = go.Figure(
         [
             go.Choroplethmapbox(
+                visible=mapa_visible,
                 name='',
                 geojson=munic_poligono,
                 featureidkey='properties.GEOCODIGO',
-                locations=df['cd_munic'],
-                z=df['valor'],
+                locations=df['MUNIC_RES'],
+                z=df['Partos'],
                 # HOVER
                 hovertext=[
                     '{}<br>{}'.format(txt_vals[0], txt_vals[1])
-                    for txt_vals in df[['municipio', 'geresnome']].values
+                    for txt_vals in df[['NM_MUNIC_RES', 'GERES_MOV']].values
                 ],
                 # hoverinfo="text+z",
                 hovertemplate='Partos:  %{z:,.0d} <br>%{hovertext}',
@@ -124,7 +125,7 @@ def mapa_municipio(df, tipo, plotar_pontos):
 
     fig.update_layout(
         title={
-            'text': f'<b>Partos realizados pela GERES selecionada - {tipo} (2020-2022)</b>',
+            'text': f'<b>Partos realizados pela GERES selecionada - {tipo} (2022)</b>',
             'font': {'size': 16, 'family': 'var(--bs-font-sans-serif)'},
         },
         margin={'r': 0, 't': 25, 'l': 0, 'b': 10},

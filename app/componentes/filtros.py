@@ -1,8 +1,8 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html
-from ..data import geres_lista
+from ..data_ import geres_nomes
 
-geres = geres_lista()
+geres = geres_nomes()
 
 drop_geres = dcc.Dropdown(
     id='drop-geres',
@@ -10,7 +10,7 @@ drop_geres = dcc.Dropdown(
     placeholder='Escolha uma GERES',
     value=['I GERES - Recife'],
     clearable=False,
-    multi=True,
+    multi=False,
 )
 
 drop_tipo_partos = dcc.Dropdown(

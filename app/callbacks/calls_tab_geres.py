@@ -1,29 +1,42 @@
 from dash import Input, Output, dash_table
+from ..data_ import GRUPO_PROCED, filter_dataset, geres_nomes
 
+geres_nomes = geres_nomes()
 
-def tab_geres_partos(app, lista_geres, df_partos_geres):
+def tab_geres_partos(app):
     @app.callback(
         Output('tabela-geres', 'children'),
         Input('drop-geres', 'value'),
         Input('drop-tipo-parto', 'value'),
     )
-    def mapa(geres, tipo):
+    def call_function(geres, tipo):
         if tipo in ['Normal/Cesário', 'De Risco']:
-            df = df_partos_geres.query('TIPO_PARTO == @tipo')
+            df = filter_dataset(TIPO_PARTO=tipo)
         else:
-            df = df_partos_geres.groupby(
-                'geres_internacao', as_index=False
-            ).sum(numeric_only=True)
+            df = filter_dataset()
 
-        df = df[['geres_internacao'] + lista_geres]
-        df.rename(
-            columns={'geres_internacao': 'GERES Internação'}, inplace=True
+        df_pivot = df.\
+            groupby(['GERES_MOV', 'GERES_RES'], as_index=False)['N_AIH'].\
+            count().\
+            pivot_table(
+                index='GERES_MOV', 
+                columns='GERES_RES', 
+                values='N_AIH', 
+                aggfunc='sum', 
+                fill_value=0, 
+                # margins=True,
+                # margins_name='Total'
+                ).\
+            reset_index()
+        
+        df_pivot.rename(
+            columns={'GERES_MOV': 'GERES Intern. (linhas) / Resid. (colunas)'}, inplace=True
         )
 
         data_table = dash_table.DataTable(
             id='table-geres',
-            columns=[{'name': i, 'id': i} for i in df.columns],
-            data=df.to_dict('records'),
+            columns=[{'name': i, 'id': i} for i in df_pivot.columns],
+            data=df_pivot.to_dict('records'),
             fixed_rows={'headers': True},
             style_table={'overflowX': 'auto', 'overflowY': 'auto'},
             style_header={
@@ -50,7 +63,7 @@ def tab_geres_partos(app, lista_geres, df_partos_geres):
             },
             style_cell_conditional=[
                 {'if': {'column_id': c}, 'textAlign': 'right'}
-                for c in lista_geres
+                for c in geres_nomes
             ],
         )
         return data_table

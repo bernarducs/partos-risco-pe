@@ -1,7 +1,9 @@
 from dash import Input, Output, dash_table
+from ..data_ import filter_dataset
+from ..mapas import mapa_municipio
 
 
-def mapa(app, mapa_municipio, lista_geres, df_partos_munic):
+def mapa(app):
     @app.callback(
         Output('mapa', 'figure'),
         Output('tabela', 'children'),
@@ -10,34 +12,27 @@ def mapa(app, mapa_municipio, lista_geres, df_partos_munic):
         Input('drop-pontos-estab', 'value'),
     )
     def call_function(geres, tipo, plotar_pontos):
+        mapa_visible = True
         if len(geres) == 0:
-            series_valor = df_partos_munic[lista_geres].sum(
-                numeric_only=True, axis=1
-            )
-        elif len(geres) == 1:
-            series_valor = df_partos_munic[geres[0]].fillna(0)
+            df = filter_dataset()
+            mapa_visible = False
         else:
-            series_valor = df_partos_munic[geres].sum(
-                numeric_only=True, axis=1
-            )
-
-        df_partos_munic['valor'] = series_valor.astype('int32')
-
-        df = df_partos_munic[
-            ['cd_munic', 'municipio', 'geresnome', 'TIPO_PARTO', 'valor']
-        ]
-
+            df = filter_dataset(GERES_MOV=geres)
+        
         if tipo in ['Normal/Cesário', 'De Risco']:
             df.query('TIPO_PARTO == @tipo', inplace=True)
-        else:
-            df = df.groupby(
-                ['cd_munic', 'municipio', 'geresnome'], as_index=False
-            )['valor'].sum()
-
-        # df.rename(columns={geres: 'valor'}, inplace=True)
+        
+        df_grp = df.\
+            groupby(
+                ['NM_MUNIC_RES', 'GERES_MOV', 'MUNIC_RES'], 
+                as_index=False)['N_AIH'].\
+                count().\
+                rename(columns={'N_AIH': 'Partos'})
+        
+        print(df_grp)
 
         # TABELA
-        df_tab = df[['municipio', 'geresnome', 'valor']]
+        df_tab = df_grp[['NM_MUNIC_RES', 'GERES_MOV', 'Partos']]
         df_tab.columns = ['Município', 'GERES', 'Partos']
         df_tab_sorted = df_tab.sort_values(by='Partos', ascending=False)
 
@@ -67,4 +62,7 @@ def mapa(app, mapa_municipio, lista_geres, df_partos_munic):
             },
         )
 
-        return (mapa_municipio(df, tipo, plotar_pontos), data_table)
+        return (
+            mapa_municipio(df_grp, tipo, plotar_pontos, mapa_visible), 
+            data_table
+            )
