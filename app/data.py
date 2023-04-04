@@ -59,36 +59,48 @@ def municipios_poligono():
 
 
 def dataset():
-    df = pd.read_parquet(f'{DATASETS}/partos_pe.parquet.gzip')
-    df_geres = geres_df()
-    df_tipo_parto = tipo_parto_df()
+    return pd.read_parquet(f'{DATASETS}/partos_pe_reduz.parquet.gzip')
+    # df_geres = geres_df()
+    # df_tipo_parto = tipo_parto_df()
 
-    df_partos = (
-        df.reset_index()
-        .merge(
-            df_geres[['codmunres', 'municipio', 'geresnome']],
-            how='left',
-            left_on='MUNIC_RES',
-            right_on='codmunres',
-        )
-        .drop('codmunres', axis=1)
-        .rename(
-            columns={'geresnome': 'GERES_RES', 'municipio': 'NM_MUNIC_RES'}
-        )
-        .merge(
-            df_geres[['codmunres', 'geresnome']],
-            how='left',
-            left_on='MUNIC_MOV',
-            right_on='codmunres',
-        )
-        .drop('codmunres', axis=1)
-        .rename(
-            columns={'geresnome': 'GERES_MOV', 'municipio': 'NM_MUNIC_MOV'}
-        )
-        .merge(df_tipo_parto, how='left', on='PROC_REA')
-    )
+    # df_partos = (
+    #     df.reset_index()
+    #     .merge(
+    #         df_geres[['codmunres', 'municipio', 'geresnome']],
+    #         how='left',
+    #         left_on='MUNIC_RES',
+    #         right_on='codmunres',
+    #     )
+    #     .drop('codmunres', axis=1)
+    #     .rename(
+    #         columns={'geresnome': 'GERES_RES', 'municipio': 'NM_MUNIC_RES'}
+    #     )
+    #     .merge(
+    #         df_geres[['codmunres', 'geresnome']],
+    #         how='left',
+    #         left_on='MUNIC_MOV',
+    #         right_on='codmunres',
+    #     )
+    #     .drop('codmunres', axis=1)
+    #     .rename(
+    #         columns={'geresnome': 'GERES_MOV', 'municipio': 'NM_MUNIC_MOV'}
+    #     )
+    #     .merge(df_tipo_parto, how='left', on='PROC_REA')
+    # )
 
-    return df_partos
+    # return df_partos[
+    #     [
+    #         'N_AIH', 
+    #         'GESTAO', 
+    #         'MUNIC_RES', 
+    #         'MUNIC_MOV', 
+    #         'PROC_REA', 
+    #         'NM_MUNIC_RES', 
+    #         'GERES_RES', 
+    #         'GERES_MOV', 
+    #         'TIPO_PARTO'
+    #         ]
+    #     ]
 
 
 def _queries_concat(queries):
