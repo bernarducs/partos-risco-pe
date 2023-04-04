@@ -34,20 +34,20 @@ def tipo_parto_df():
         .rename(columns={'level_1': 'TIPO_PARTO', 0: 'PROC_REA'})
         .drop('level_0', axis=1)
     )
+    
 
-
-def hospitais_df():
+def estabelecimentos_df():
     """
     Retorna o dataframe de hospitais, leitos e pontos (lat, lng)
     """
-    return pd.read_parquet(f'{DATASETS}/estabelecimentos.parquet.gzip')
+    return pd.read_parquet(f'{DATASETS}/estabelecimentos_leitos_pontos.parquet.gzip')
 
 
 def municipios_poligono():
     """
     Retorna o polígono (camada) dos municípios pernambucanos
     """
-    with open(f'{DATASETS}//municipios.geojson') as json_file:
+    with open(f'{DATASETS}/municipios.geojson') as json_file:
         municipios_geo = json.load(json_file)
 
     for munic_feat in municipios_geo.get('features'):

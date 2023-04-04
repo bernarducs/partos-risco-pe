@@ -1,18 +1,23 @@
 import plotly.graph_objects as go
+from .data import estabelecimentos_df, municipios_poligono
 
-from .data import hospitais_df, municipios_poligono
 
-df_hosp_leitos = hospitais_df()
-df_hosp_leitos_com_obst = df_hosp_leitos.query("proced_partos == 'SIM'")
-df_hosp_leitos_sem_obst = df_hosp_leitos.query("proced_partos == 'NAO'")
+df_hosp_leitos = estabelecimentos_df()
+df_hosp_estadual = df_hosp_leitos.query("GESTAO == 'ESTADUAL'")
+df_hosp_municipal = df_hosp_leitos.query("GESTAO == 'MUNICIPAL'")
+df_hosp_dupla = df_hosp_leitos.query("GESTAO == 'DUPLA'")
 
 munic_poligono = municipios_poligono()
 
 
 def point_hover_template(df):
+    hover_txt = '<b>{}</b><br>{}<br><br><b>Leitos Obstetrícia</b><br>Cirúgicos: ' \
+    '{} / Clínica: {}<br><br><b>UTI Neo</b><br>Tipo I: {} / Tipo II: ' \
+    '{} / Tipo III: {}<br><br><b>UCI Neo</b><br>Convencional: {} / Caguru: {}'
+
     cols_hover = [
         'estabelecimento',
-        'municipio',
+        'MUNICIPIO',
         'obst_cirurg',
         'obst_clinica',
         'uti_neo_i',
@@ -22,7 +27,7 @@ def point_hover_template(df):
         'uci_neo_canguru',
     ]
     hover_text = [
-        '<b>{}</b><br>{}<br><br><b>Leitos Obstetrícia</b><br>Cirúgicos: {} / Clínica: {}<br><br><b>UTI Neo</b><br>Tipo I: {} / Tipo II: {} / Tipo III: {}<br><br><b>UCI Neo</b><br>Convencional: {} / Caguru: {}'.format(
+        hover_txt.format(
             txt[0],
             txt[1],
             txt[2],
@@ -95,28 +100,44 @@ def mapa_municipio(df, tipo, plotar_pontos):
             ),
             go.Scattermapbox(
                 visible=ver_estab_sem_leitos,
-                name='Estabelecimentos SEM leitos obst. em jan/2023',
-                lat=df_hosp_leitos_sem_obst['lat'],
-                lon=df_hosp_leitos_sem_obst['lng'],
+                name='Estabelecimentos ESTADUAIS em jan/2023',
+                lat=df_hosp_estadual['lat'],
+                lon=df_hosp_estadual['lng'],
                 mode='markers',
-                marker=dict(size=14, color='#95BDFF', opacity=0.7),
-                hovertext=point_hover_template(df_hosp_leitos_sem_obst),
+                marker=dict(size=14, color='#3795BD', opacity=0.7),
+                hovertext=point_hover_template(df_hosp_estadual),
                 hovertemplate='%{hovertext}',
                 legendrank=3,
             ),
             go.Scattermapbox(
                 visible=ver_estab_com_leitos,
-                name='Estabelecimentos COM leitos obst. em jan/2023',
-                lat=df_hosp_leitos_com_obst['lat'],
-                lon=df_hosp_leitos_com_obst['lng'],
+                name='MUNICIPAIS',
+                lat=df_hosp_municipal['lat'],
+                lon=df_hosp_municipal['lng'],
                 mode='markers',
                 marker=go.scattermapbox.Marker(
                     # size=df_hosp_leitos_com_obst['total_leitos_obstetricos'] / 2.5,
-                    size=14,
+                    size=5,
                     color='#146C94',
                     opacity=0.7,
                 ),
-                hovertext=point_hover_template(df_hosp_leitos_com_obst),
+                hovertext=point_hover_template(df_hosp_municipal),
+                hovertemplate='%{hovertext}',
+                legendrank=2,
+            ),
+            go.Scattermapbox(
+                visible=ver_estab_com_leitos,
+                name='DUPLA',
+                lat=df_hosp_dupla['lat'],
+                lon=df_hosp_dupla['lng'],
+                mode='markers',
+                marker=go.scattermapbox.Marker(
+                    # size=df_hosp_leitos_com_obst['total_leitos_obstetricos'] / 2.5,
+                    size=9,
+                    color='#159895',
+                    opacity=0.7,
+                ),
+                hovertext=point_hover_template(df_hosp_dupla),
                 hovertemplate='%{hovertext}',
                 legendrank=2,
             ),
@@ -140,6 +161,7 @@ def mapa_municipio(df, tipo, plotar_pontos):
         legend=dict(
             orientation='h', yanchor='bottom', y=0.90, xanchor='right', x=1
         ),
+        legend_traceorder="reversed"
     )
 
     return fig
