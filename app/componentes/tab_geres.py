@@ -1,5 +1,5 @@
 import dash_bootstrap_components as dbc
-from dash import html
+from dash import html, dcc
 
 descricao_tabela = (
     'A tabela abaixo mostra a relação entre as regionais '
@@ -25,7 +25,7 @@ tab_geres = html.Div(
         dbc.Row([dbc.Col(html.P(descricao_tabela), width=4)]),
         dbc.Row(
             [
-                dbc.Col(id='tabela-geres'),
+                dcc.Loading(dbc.Col(id='tabela-geres')),
             ]
         ),
     ],
