@@ -18,10 +18,10 @@ drop_tipo_partos = dcc.Dropdown(
     id='drop-tipo-parto',
     options=[
         {'label': g, 'value': g}
-        for g in ['Todos os partos', 'Normal/Cesário', 'De Risco']
+        for g in ['Risco Habitual + De Risco', 'Risco Habitual', 'De Risco']
     ],
     placeholder='Partos (tipo)',
-    value='Todos os partos',
+    value='Risco Habitual + De Risco',
     clearable=False,
     multi=False,
 )
@@ -106,7 +106,7 @@ filtros = html.Div(
                             dbc.Row(
                                 [
                                     html.P(
-                                        ['Partos:'],
+                                        ['Gestação (tipo):'],
                                         style={
                                             'margin-bottom': '0rem',
                                             'font-weight': 'bold',

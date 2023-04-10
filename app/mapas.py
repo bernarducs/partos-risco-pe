@@ -95,7 +95,7 @@ def mapa_municipio(df, tipo, plotar_pontos):
                 zmin=0,
                 zmax=1000,
                 marker_opacity=0.5,
-                marker_line_width=0,
+                marker_line_width=0.5,
                 legendrank=1,
             ),
             go.Scattermapbox(

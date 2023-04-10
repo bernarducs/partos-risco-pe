@@ -26,6 +26,7 @@ def mapa(app):
         if gestao != 0:
             df.query('GESTAO == @gestao', inplace=True)
 
+        # MAPA
         df_grp = (
             df.groupby(
                 ['NM_MUNIC_RES', 'GERES_RES', 'MUNIC_RES'], as_index=False
@@ -65,4 +66,7 @@ def mapa(app):
             },
         )
 
-        return (mapa_municipio(df_grp, tipo, plotar_pontos), data_table)
+        return (
+            mapa_municipio(df_grp, tipo, plotar_pontos), 
+            data_table
+            )

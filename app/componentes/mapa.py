@@ -9,6 +9,10 @@ mapa = html.Div(
                 dbc.Col(
                     [
                         dbc.Row(
+                            html.P(id='kpi-munic-propria-geres'),
+                            style={'font-weight': 'bold'},
+                        ),
+                        dbc.Row(
                             html.P('Município de residência'),
                             style={'font-weight': 'bold'},
                         ),
